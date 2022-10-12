@@ -7,7 +7,7 @@ function PageLayout({ children }) {
     <div id='page' className='font-primary bg-background-base scroll-smooth'>
       <Navigation />
       <main className='container scroll-smooth'>{children}</main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

@@ -28,11 +28,11 @@ function Navigation() {
   }
   useEffect(() => {
     handleHeaderOnScroll(scrollLength);
-    window.addEventListener('resize', handleResize, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('resize', handleResize, { passive: true });
+    document.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      window.removeEventListener('resize', handleResize, { passive: true });
-      window.removeEventListener('scroll', handleScroll, { passive: true });
+      document.removeEventListener('resize', handleResize, { passive: true });
+      document.removeEventListener('scroll', handleScroll, { passive: true });
     };
   }, [handleResize, handleScroll]);
 

@@ -2,18 +2,9 @@ import { ContactForm } from './ContactForm';
 import React, { useEffect, useRef, useState } from 'react';
 import { ButtonPrimary } from './ButtonPrimary';
 
-import { motion, useScroll } from 'framer-motion';
-function Hero() {
-  const section = useRef();
-  const { scrollY } = useScroll();
-  const [scrollYAxis, setScroll] = useState(0);
+import { motion, useTransform } from 'framer-motion';
 
-  useEffect(() => {
-    return scrollY.onChange((latest) => {
-      setScroll(latest);
-    });
-  }, []);
-
+function Hero({ image, isInView, scrollLength }) {
   const ImgVariant = {
     offscreen: {
       x: '100%',
@@ -55,11 +46,12 @@ function Hero() {
     },
   };
 
+  // const opacityVal = useTransform(scrollLength, [0, 400], [0, 1]);
+  // console.log(opacityVal);
   return (
     <section
-      ref={section}
       data-section='home'
-      className='bg-primary-base/10 col-span-12 container xl:min-h-screen h-full pb-10 lg:pb-20 overflow-hidden'
+      className=' col-span-12 container h-fit pb-10 lg:pb-24 place-content-start'
     >
       <div className='w-full col-start-2 col-span-10 3xl:col-start-3 3xl:col-span-8 flex flex-col gap-12 lg:justify-between pt-36 lg:pt-40 xl:pt-56 lg:flex-row lg:place-self-center xl:justify-between'>
         {/* Hero Text Content */}
@@ -68,13 +60,16 @@ function Hero() {
           variants={heroTextVariant}
           initial='offscreen'
           animate='onscreen'
+          style={{
+            translateX: `-${scrollLength * 4}px `,
+            rotateY: `-${scrollLength * 0.7}deg`,
+            transformPerspective: '2500px',
+            origin: 'right',
+          }}
         >
           <motion.h1
             className=' text-heading-base text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl font-bold md:text-center lg:text-start'
             variants={heroItem}
-            style={{
-              translateX: `-${scrollYAxis * 0.12}px`,
-            }}
           >
             <span className='md:block lg:pb-4'>Ultimate support </span>
             <span className='lg:inline-block lg:pb-4'>system for</span> leading
@@ -84,9 +79,6 @@ function Hero() {
           <motion.p
             className='text-heading-base leading-7 md:text-lg  max-w-md md:max-w-lg md:text-center lg:text-start'
             variants={heroItem}
-            style={{
-              translateX: `-${scrollYAxis * 0.09}px`,
-            }}
           >
             Get your tests delivered at let home collect sample from the victory
             of the managments that supplies best design system guidelines ever.
@@ -95,9 +87,6 @@ function Hero() {
           <motion.div
             className='w-full flex md:justify-center transition-opacity'
             variants={heroItem}
-            style={{
-              translateX: `-${scrollYAxis * 0.09}px`,
-            }}
           >
             <ContactForm
               successMessage={'Thanks you'}
@@ -161,12 +150,19 @@ function Hero() {
             variants={ImgVariant}
             initial='offscreen'
             animate='onscreen'
-            style={{ translateX: `${scrollYAxis * 0.15}px` }}
+            style={{
+              translateX: `${scrollLength * 4}px`,
+              scale: `${1 - scrollLength * 0.001}`,
+              rotateY: `${scrollLength * 0.7}deg`,
+              transformPerspective: '2500px',
+              // origin: 'left',
+            }}
           >
             <img
               className='object-cover'
               src={'../images/banner.png'}
               alt={'Ultimate support system'}
+              ref={image}
             />
           </motion.figure>
         </div>

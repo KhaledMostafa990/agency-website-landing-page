@@ -5,20 +5,114 @@ import Hero from '../components/Hero';
 import Pricing from '../components/Pricing';
 import SupportSection from '../components/SupportSection';
 import Testimonials from '../components/Testimonials';
+import { Parallax, ParallaxLayer } from '@react-spring/parallax';
+import { useEffect, useRef, useState } from 'react';
 
+function useRefInView(ref, shwonSize) {
+  const [isInView, setInView] = useState(null);
+  const isInViewHandler = (boolean) => setInView(boolean);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          isInViewHandler(true);
+        } else {
+          isInViewHandler(false);
+        }
+      },
+      { threshold: shwonSize }
+    );
+
+    if (ref?.current != null) {
+      observer.observe(ref.current);
+    }
+  }, [isInViewHandler]);
+
+  return {
+    isInView,
+  };
+}
+function useScrollY(root) {
+  const [scrollLength, setScrollLength] = useState(0);
+  const onScrollHandler = () => setScrollLength(root.current.current);
+
+  useEffect(() => {}, [onScrollHandler]);
+
+  return {
+    scrollLength,
+    onScrollChange: onScrollHandler,
+  };
+}
 export default function Home({ data }) {
+  const containerRef = useRef();
+  const imageRef = useRef();
+
+  const { isInView } = useRefInView(imageRef);
+  const { scrollLength, onScrollChange } = useScrollY(containerRef);
+
+  // console.log(isInView);
+  // console.log(scrollLength);
+
   return (
     <>
       <Head>
         <title>Agency landing page</title>
       </Head>
 
-      <Hero />
-      <SupportSection />
-      <CoreFeatureSection accordionData={data.accordion} />
-      <FeaturesQualitySection featureQuality={data.featureQulity} />
-      <Pricing pricing={data.pricing} />
-      <Testimonials testimonials={data.testimonials} />
+      <Parallax ref={containerRef} pages={5} onScrollCapture={onScrollChange}>
+        <ParallaxLayer
+          // factor={1}
+          speed={3}
+          // sticky={{ start: 0 }}
+          className='bg-primary-base/10'
+          // style={{ translateY: `-${scrollLength}px` }}
+        />
+
+        <ParallaxLayer
+          // offset={1}
+          speed={1.5}
+          // factor={1}
+          // sticky={{ end: 0.3 }}
+          className='z-10'
+          // style={{ translateY: `-${scrollLength}px` }}
+        >
+          <Hero
+            image={imageRef}
+            isInView={isInView}
+            scrollLength={scrollLength}
+          />
+        </ParallaxLayer>
+
+        <ParallaxLayer
+          offset={1}
+          // factor={1}
+          // speed={1}
+          // sticky={{ start: 1, end: 1.99 }}
+          // style={{ translateY: `-${scrollLength}px` }}
+        >
+          <SupportSection />
+        </ParallaxLayer>
+
+        <ParallaxLayer
+          offset={2}
+          // sticky={{ start: 2, end: 2 }}
+        >
+          <CoreFeatureSection accordionData={data.accordion} />
+        </ParallaxLayer>
+
+        <ParallaxLayer offset={3}>
+          <FeaturesQualitySection featureQuality={data.featureQulity} />
+        </ParallaxLayer>
+
+        <ParallaxLayer offset={4}>
+          <Pricing pricing={data.pricing} />
+        </ParallaxLayer>
+
+        <ParallaxLayer offset={5}>
+          <Testimonials testimonials={data.testimonials} />
+        </ParallaxLayer>
+      </Parallax>
     </>
   );
 }

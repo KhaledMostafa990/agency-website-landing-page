@@ -5,9 +5,9 @@ function SupportSection() {
   return (
     <section
       data-section='support'
-      className='col-span-12 container h-full py-24 md:py-40'
+      className='col-span-12 container h-fit  py-24 md:py-40 place-content-center '
     >
-      <div className='col-start-2 col-span-10 3xl:col-start-3 3xl:col-span-8 flex flex-col gap-14 md:flex-row md:gap-4 xl:gap-12'>
+      <div className='h-fit col-start-2 col-span-10 3xl:col-start-3 3xl:col-span-8 flex flex-col gap-14 md:flex-row md:gap-4 xl:gap-12'>
         {/* Support card */}
         <SupportCard />
         <SupportCard />
